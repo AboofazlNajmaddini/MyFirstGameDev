@@ -4,8 +4,10 @@ public class player : MonoBehaviour
 {
     private Rigidbody2D rb;
     private float xinput;
+
     [SerializeField]private float moveSpeed;
     [SerializeField]private float jampforce;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
