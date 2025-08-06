@@ -19,7 +19,7 @@ public class player : MonoBehaviour
     {
         xinput = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(xinput*moveSpeed, rb.velocity.y);
-        if(Input.GetKeyDown(KeyCode.Space)) // Check if the space key is pressed down
+        if (Input.GetKeyDown(KeyCode.Space)) // Check if the space key is pressed down
         {
             rb.velocity = new Vector2(rb.velocity.x, jampforce); // Reset vertical velocity to prevent double jump
         }
