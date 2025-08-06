@@ -22,5 +22,6 @@ public class player : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jampforce); // Reset vertical velocity to prevent double jump
         }
 
-    }
+    } 
+
 }
