@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class player : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
+    private Rigidbody2D rb;
     private float xinput;
+    private Animator animator;
+    private bool isMoveing;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jampforce;
@@ -11,6 +13,9 @@ public class player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponentInChildren<Animator>();
+        
     }
 
     // Update is called once per frame
@@ -23,6 +28,10 @@ public class player : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jampforce); // Reset vertical velocity to prevent double jump
         }
+        
+
+        isMoveing = rb.velocity.x !=0;
+        animator.SetBool("isMoveing", isMoveing);
 
     }
 
