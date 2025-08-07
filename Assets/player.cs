@@ -5,6 +5,7 @@ public class player : MonoBehaviour
     private Rigidbody2D rb;
     private float xinput;
     private Animator animator;
+    private bool isMoveing;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jampforce;
@@ -18,36 +19,23 @@ public class player : MonoBehaviour
     }
 
     
+    [System.Obsolete]
     void Update()
     {
-        Movement();
-        CheckInput();
-        animatorConteroller();
-
-    }
-
-    private void CheckInput()
-    {
         xinput = Input.GetAxisRaw("Horizontal");
+        rb.linearVelocity = new Vector2(xinput * moveSpeed, rb.linearVelocity.y);
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Jamp();
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
         }
+
+        Move();
+
     }
 
-    private void Movement()
+    private void Move()
     {
-        rb.velocity = new Vector2(xinput * moveSpeed, rb.velocity.y);
-    }
-
-    private void Jamp()
-    {
-        rb.velocity = new Vector2(rb.velocity.x, jampforce);
-    }
-
-    private void animatorConteroller()
-    {
-        bool isMoveing = rb.velocity.x != 0;
+        isMoveing = rb.linearVelocity.x != 0;
         animator.SetBool("isMoveing", isMoveing);
     }
 }
