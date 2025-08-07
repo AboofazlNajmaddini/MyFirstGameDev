@@ -6,6 +6,8 @@ public class player : MonoBehaviour
     private float xinput;
     private Animator animator;
     private bool isMoveing;
+    private bool faceRight = true;
+    private int faceDirection = 1;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jampforce;
@@ -22,15 +24,32 @@ public class player : MonoBehaviour
     [System.Obsolete]
     void Update()
     {
-        xinput = Input.GetAxisRaw("Horizontal");
-        rb.linearVelocity = new Vector2(xinput * moveSpeed, rb.linearVelocity.y);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
-        }
-
+        Movement();
+        AnimationController();
         Move();
 
+    }
+
+    private void AnimationController()
+    {
+        xinput = Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jamp();
+        }
+        if (Input.GetKeyDown(KeyCode.R)) { 
+            Flip();
+        }
+    }
+
+    private void Movement()
+    {
+        rb.linearVelocity = new Vector2(xinput * moveSpeed, rb.linearVelocity.y);
+    }
+
+    private void Jamp()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
     }
 
     private void Move()
@@ -38,4 +57,11 @@ public class player : MonoBehaviour
         isMoveing = rb.linearVelocity.x != 0;
         animator.SetBool("isMoveing", isMoveing);
     }
-}
+
+    private void Flip()
+    {
+        faceDirection *= -1;
+        faceRight = !faceRight;
+        transform.Rotate(0 , -180 , 0);
+    }
+}   
