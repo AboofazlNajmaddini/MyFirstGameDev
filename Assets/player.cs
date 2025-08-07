@@ -37,9 +37,7 @@ public class player : MonoBehaviour
         {
             Jamp();
         }
-        if (Input.GetKeyDown(KeyCode.R)) { 
-            Flip();
-        }
+        FlipConteroller();
     }
 
     private void Movement()
@@ -63,5 +61,16 @@ public class player : MonoBehaviour
         faceDirection *= -1;
         faceRight = !faceRight;
         transform.Rotate(0 , -180 , 0);
+    }
+    private void FlipConteroller()
+    {
+        if (rb.linearVelocity.x > 0 && !faceRight)
+        {
+            Flip();
+        }
+        else if (rb.linearVelocity.x < 0 && faceRight)
+        {
+            Flip();
+        }
     }
 }   
