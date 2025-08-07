@@ -3,8 +3,8 @@ using UnityEngine;
 public class player : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private float xinput;
     private Animator animator;
+    private float xinput;
     private bool isMoveing;
     private bool faceRight = true;
     private int faceDirection = 1;
@@ -17,7 +17,6 @@ public class player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
-        
     }
 
     
@@ -27,7 +26,7 @@ public class player : MonoBehaviour
         Movement();
         AnimationController();
         Move();
-
+        FlipConteroller();
     }
 
     private void AnimationController()
@@ -37,7 +36,6 @@ public class player : MonoBehaviour
         {
             Jamp();
         }
-        FlipConteroller();
     }
 
     private void Movement()
@@ -65,12 +63,8 @@ public class player : MonoBehaviour
     private void FlipConteroller()
     {
         if (rb.linearVelocity.x > 0 && !faceRight)
-        {
             Flip();
-        }
         else if (rb.linearVelocity.x < 0 && faceRight)
-        {
             Flip();
-        }
     }
 }   
