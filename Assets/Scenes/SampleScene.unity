@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 49007586}
   - component: {fileID: 49007585}
   - component: {fileID: 49007587}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -485,8 +485,8 @@ GameObject:
   - component: {fileID: 1489409164}
   - component: {fileID: 1489409163}
   - component: {fileID: 1489409162}
-  - component: {fileID: 1489409166}
   - component: {fileID: 1489409167}
+  - component: {fileID: 1489409166}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -606,6 +606,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   jampforce: 5
+  groundCheckDistance: 0.7
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!70 &1489409167
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -654,7 +658,7 @@ GameObject:
   - component: {fileID: 1520837856}
   - component: {fileID: 1520837855}
   - component: {fileID: 1520837854}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

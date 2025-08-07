@@ -31,7 +31,7 @@ public class player : MonoBehaviour
         Movement();
         AnimationController();
         CollisionChecks();
-        Move();
+        CheckInput();
         FlipConteroller();
     }
 
@@ -41,12 +41,10 @@ public class player : MonoBehaviour
     }
 
     private void AnimationController()
-    {
-        xinput = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jamp();
-        }
+    {      
+        isMoveing = rb.linearVelocity.x != 0;
+        animator.SetBool("isMoveing", isMoveing);
+        animator.SetBool("isGrounded", isGrounded);
     }
 
     private void Movement()
@@ -56,14 +54,19 @@ public class player : MonoBehaviour
 
     private void Jamp()
     {
-        if (isGrounded) 
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
+        if (isGrounded) { 
+            
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
+        }
     }
 
-    private void Move()
+    private void CheckInput()
     {
-        isMoveing = rb.linearVelocity.x != 0;
-        animator.SetBool("isMoveing", isMoveing);
+        xinput = Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jamp();
+        }
     }
 
     private void Flip()
