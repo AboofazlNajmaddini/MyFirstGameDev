@@ -23,6 +23,8 @@ public class player : MonoBehaviour
     [SerializeField] private float dashTime;
 
     [Header("Attack info")]
+    private float comboTime = 2;
+    private float comboTimeCounter;
     private bool isAttacking;
     private int AttackCombo;
 
@@ -41,20 +43,30 @@ public class player : MonoBehaviour
         CollisionChecks();
         CheckInput();
         FlipConteroller();
-        dashTime -= Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        ComboChecker();
+
+    }
+
+    private void ComboChecker()
+    {
+        comboTimeCounter -= Time.deltaTime;
+        if (comboTimeCounter < 0)
         {
-            dashTime = dashdioration;
+            AttackCombo = 0;
         }
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (AttackCombo > 2)
         {
-            isAttacking = true;
+            AttackCombo = 0;
         }
     }
 
     public void AttackTrigerd()
     {
+
         isAttacking = false;
+        AttackCombo++;
+        
+
     }
 
 
@@ -95,10 +107,21 @@ public class player : MonoBehaviour
 
     private void CheckInput()
     {
+        dashTime -= Time.deltaTime;
         xinput = Input.GetAxisRaw("Horizontal");
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jamp();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            dashTime = dashdioration;
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            isAttacking = true;
+            comboTimeCounter = comboTime;
         }
     }
 
