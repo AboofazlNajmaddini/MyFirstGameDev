@@ -21,13 +21,15 @@ public class player : MonoBehaviour
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashdioration;
     [SerializeField] private float dashTime;
+    [SerializeField] private float dashCoolDown;
+    [SerializeField] private float dashCoolDownTimer;
 
     [Header("Attack info")]
     private float comboTime = 2;
     private float comboTimeCounter;
     private bool isAttacking;
     private int AttackCombo;
-
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -44,7 +46,6 @@ public class player : MonoBehaviour
         CheckInput();
         FlipConteroller();
         ComboChecker();
-
     }
 
     private void ComboChecker()
@@ -61,23 +62,13 @@ public class player : MonoBehaviour
     }
 
     public void AttackTrigerd()
-    {
-
+    { 
         isAttacking = false;
         AttackCombo++;
-        
-
-    }
-
-
-    private void CollisionChecks()
-    {
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
     }
 
     private void AnimationController()
     {      
-        isMoveing = rb.linearVelocity.x != 0;
         animator.SetBool("isMoveing", isMoveing);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("isAttacking", isAttacking);
@@ -86,6 +77,7 @@ public class player : MonoBehaviour
 
     private void Movement()
     {
+        isMoveing = rb.linearVelocity.x != 0;
         if (isAttacking) {
             rb.linearVelocity = new Vector2(0, 0);
         }
@@ -100,17 +92,10 @@ public class player : MonoBehaviour
         
     }
 
-    private void Jamp()
-    {
-        if (isGrounded) { 
-            
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
-        }
-    }
-
     private void CheckInput()
     {
         dashTime -= Time.deltaTime;
+        dashCoolDownTimer -= Time.deltaTime;
         xinput = Input.GetAxisRaw("Horizontal");
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -119,7 +104,7 @@ public class player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            dashTime = dashdioration;
+            DashAbility();
         }
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -128,11 +113,20 @@ public class player : MonoBehaviour
         }
     }
 
-    private void Flip()
+    private void DashAbility()
     {
-        faceDirection *= -1;
-        faceRight = !faceRight;
-        transform.Rotate(0 , -180 , 0);
+        if (dashCoolDownTimer < 0)
+        {
+            dashCoolDownTimer = dashCoolDown;
+            dashTime = dashdioration;
+        }
+    }
+    private void Jamp()
+    {
+        if (isGrounded) { 
+            
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
+        }
     }
     private void FlipConteroller()
     {
@@ -141,9 +135,17 @@ public class player : MonoBehaviour
         else if (rb.linearVelocity.x < 0 && faceRight)
             Flip();
     }
-    private void OnDrawGizmos()
+
+    private void Flip()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x ,transform.position.y - groundCheckDistance));
+        faceDirection *= -1;
+        faceRight = !faceRight;
+        transform.Rotate(0 , -180 , 0);
     }
+
+
+    // Physics and Gizmos
+    private void CollisionChecks() => isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+    private void OnDrawGizmos() => Gizmos.DrawLine(transform.position, new Vector3(transform.position.x ,transform.position.y - groundCheckDistance));
+
 }   
