@@ -17,6 +17,10 @@ public class player : MonoBehaviour
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Dash info")]
+    [SerializeField] private float dashSpeed;
+    [SerializeField] private float dashdioration;
+    [SerializeField] private float dashTime;
 
     void Start()
     {
@@ -33,6 +37,12 @@ public class player : MonoBehaviour
         CollisionChecks();
         CheckInput();
         FlipConteroller();
+        dashTime -= Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            dashTime = dashdioration;
+        }
+
     }
 
     private void CollisionChecks()
@@ -49,7 +59,15 @@ public class player : MonoBehaviour
 
     private void Movement()
     {
-        rb.linearVelocity = new Vector2(xinput * moveSpeed, rb.linearVelocity.y);
+        if (dashTime > 0)
+        {
+            rb.linearVelocity = new Vector2(dashSpeed * xinput, rb.linearVelocity.y);
+        }
+        else 
+        { 
+            rb.linearVelocity = new Vector2(xinput * moveSpeed, rb.linearVelocity.y);
+        }
+        
     }
 
     private void Jamp()
