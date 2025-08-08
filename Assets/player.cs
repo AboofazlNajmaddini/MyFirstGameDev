@@ -22,6 +22,10 @@ public class player : MonoBehaviour
     [SerializeField] private float dashdioration;
     [SerializeField] private float dashTime;
 
+    [Header("Attack info")]
+    private bool isAttacking;
+    private int AttackCombo;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -42,8 +46,17 @@ public class player : MonoBehaviour
         {
             dashTime = dashdioration;
         }
-
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            isAttacking = true;
+        }
     }
+
+    public void AttackTrigerd()
+    {
+        isAttacking = false;
+    }
+
 
     private void CollisionChecks()
     {
@@ -55,13 +68,15 @@ public class player : MonoBehaviour
         isMoveing = rb.linearVelocity.x != 0;
         animator.SetBool("isMoveing", isMoveing);
         animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isAttacking", isAttacking);
+        animator.SetInteger("AttackCombo" , AttackCombo);
     }
 
     private void Movement()
     {
         if (dashTime > 0)
         {
-            rb.linearVelocity = new Vector2(dashSpeed * xinput, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(dashSpeed * xinput, 0);
         }
         else 
         { 
