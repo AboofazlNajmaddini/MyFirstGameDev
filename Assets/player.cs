@@ -86,7 +86,10 @@ public class player : MonoBehaviour
 
     private void Movement()
     {
-        if (dashTime > 0)
+        if (isAttacking) {
+            rb.linearVelocity = new Vector2(0, 0);
+        }
+        else if (dashTime > 0)
         {
             rb.linearVelocity = new Vector2(dashSpeed * xinput, 0);
         }
