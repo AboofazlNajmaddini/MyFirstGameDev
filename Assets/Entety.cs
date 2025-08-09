@@ -5,6 +5,8 @@ public class Entety : MonoBehaviour
     [Header("Collision info")]
     protected  Rigidbody2D rb;
     protected  Animator animator;
+
+
     [Header("some info")]
     [SerializeField]protected LayerMask groundLayer;
     [SerializeField] protected float groundCheckDis;

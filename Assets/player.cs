@@ -6,6 +6,7 @@ public class player : Entety
     [Header("Basic Features")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jampforce;
+    private bool isMoveing;
     private float xinput;
 
 
@@ -51,6 +52,7 @@ public class player : Entety
 
     private void Movement()
     {
+        isMoveing = rb.linearVelocity.x != 0;
         if (isAttacking) rb.linearVelocity = new Vector2(0, 0);
         else if (dashTime > 0) rb.linearVelocity = new Vector2( dashSpeed * faceDirection, 0);
         else rb.linearVelocity = new Vector2( xinput * moveSpeed , rb.linearVelocity.y);
@@ -109,8 +111,6 @@ public class player : Entety
     // Conterollers
     private void AnimationController()
     {
-        bool isMoveing = rb.linearVelocity.x != 0;
-        Debug.Log(rb.linearVelocity.x);
         animator.SetBool("isMoveing", isMoveing);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("isAttacking", isAttacking);
@@ -124,5 +124,4 @@ public class player : Entety
         else if (rb.linearVelocity.x < 0 && faceRight)
             Flip();
     }
-
 }   
