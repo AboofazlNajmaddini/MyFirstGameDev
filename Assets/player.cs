@@ -1,22 +1,13 @@
 using UnityEngine;
 
-public class player : MonoBehaviour
+public class player : Entety
 {
-    private Rigidbody2D rb;
-    private Animator animator;
-    private float xinput;
-    private bool isMoveing;
-    private bool faceRight = true;
-    private int faceDirection = 1;
-    private bool isGrounded;
 
     [Header("Basic Features")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jampforce;
+    private float xinput;
 
-    [Header("Collision info")]
-    [SerializeField] private float groundCheckDistance;
-    [SerializeField] private LayerMask groundLayer;
 
     [Header("Dash info")]
     [SerializeField] private float dashSpeed;
@@ -30,24 +21,23 @@ public class player : MonoBehaviour
     private float comboTimeCounter;
     private bool isAttacking;
     private int AttackCombo;
-    
-    void Start()
+
+    protected override void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponentInChildren<Animator>();
+        base.Start();
     }
 
     
-    [System.Obsolete]
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         Movement();
         AnimationController();
-        CollisionChecks();
         CheckInput();
         FlipConteroller();
         ComboChecker();
         TimeChecker();
+        CollisionChecks();
     }
 
 
@@ -61,9 +51,8 @@ public class player : MonoBehaviour
 
     private void Movement()
     {
-        isMoveing = rb.linearVelocity.x != 0;
         if (isAttacking) rb.linearVelocity = new Vector2(0, 0);
-        else if (dashTime > 0) rb.linearVelocity = new Vector2( dashSpeed * xinput, 0);
+        else if (dashTime > 0) rb.linearVelocity = new Vector2( dashSpeed * faceDirection, 0);
         else rb.linearVelocity = new Vector2( xinput * moveSpeed , rb.linearVelocity.y);
     }
 
@@ -81,28 +70,6 @@ public class player : MonoBehaviour
         if (isGrounded) rb.linearVelocity = new Vector2(rb.linearVelocity.x, jampforce);
     }
 
-    private void Flip()
-    {
-        faceDirection *= -1;
-        faceRight = !faceRight;
-        transform.Rotate(0 , -180 , 0);
-    }
-
-
-
-    // Checkers
-    private void CheckInput()
-    {
-        xinput = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKeyDown(KeyCode.Space)) Jamp();
-        if (Input.GetKeyDown(KeyCode.LeftShift)) DashAbility();
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            isAttacking = true;
-            comboTimeCounter = comboTime;
-        }
-    }
-
     private void ComboChecker()
     {
         if (comboTimeCounter < 0)
@@ -114,6 +81,22 @@ public class player : MonoBehaviour
             AttackCombo = 0;
         }
     }
+
+
+    // Checkers
+    private void CheckInput()
+    {
+        xinput = Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.Space)) Jamp();
+        if (Input.GetKeyDown(KeyCode.LeftShift)) DashAbility();
+        if (Input.GetKeyDown(KeyCode.Mouse0) && isGrounded )
+        {
+            isAttacking = true;
+            comboTimeCounter = comboTime;
+        }
+    }
+
+
     private void TimeChecker()
     {
         comboTimeCounter -= Time.deltaTime;
@@ -126,6 +109,8 @@ public class player : MonoBehaviour
     // Conterollers
     private void AnimationController()
     {
+        bool isMoveing = rb.linearVelocity.x != 0;
+        Debug.Log(rb.linearVelocity.x);
         animator.SetBool("isMoveing", isMoveing);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("isAttacking", isAttacking);
@@ -139,11 +124,5 @@ public class player : MonoBehaviour
         else if (rb.linearVelocity.x < 0 && faceRight)
             Flip();
     }
-
-
-
-    // Physics and Gizmos
-    private void CollisionChecks() => isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
-    private void OnDrawGizmos() => Gizmos.DrawLine(transform.position, new Vector3(transform.position.x ,transform.position.y - groundCheckDistance));
 
 }   
